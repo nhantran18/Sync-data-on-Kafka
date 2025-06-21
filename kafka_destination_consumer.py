@@ -27,6 +27,7 @@ from dotenv import load_dotenv
 load_dotenv()
 DESTINATION_USERNAME = os.environ['DESTINATION_USERNAME']
 DESTINATION_PASSWORD = os.environ['DESTINATION_PASSWORD']
+DESTINATION_BOOSTRAP_SERVERS = os.environ['DESTINATION_BOOSTRAP_SERVERS'].split(',')
 MONGODB_USERNAME = os.environ['MONGODB_USERNAME']
 MONGODB_PASSWORD = os.environ['MONGODB_PASSWORD']
 MONGODB_HOST = os.environ['MONGODB_HOST']
@@ -140,7 +141,7 @@ if __name__ == "__main__":
         },
         'topic': 'topic-4-partition-2-rep',
         'kafka_destination_consumer' : {
-            'bootstrap_servers': ["localhost:9094","localhost:9194","localhost:9294"],
+            'bootstrap_servers': DESTINATION_BOOSTRAP_SERVERS,
             'auto_offset_reset': 'latest',
             'enable_auto_commit': True,
             'group_id': 'destination-consumer-group',

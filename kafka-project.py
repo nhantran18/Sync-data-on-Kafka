@@ -1,11 +1,4 @@
 """
-kafka.bootstrap.servers=46.202.167.130:9094,46.202.167.130:9194,46.202.167.130:9294
-kafka.security.protocol=SASL_PLAINTEXT
-kafka.sasl.mechanism=PLAIN
-kafka.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka" password="UnigapKafka@2024";
-topic=product_view
-"""
-"""
 Description: Viết chương trình sử dụng Python thực hiện các yêu cầu sau:
 - Đọc dữ liệu từ nguồn Kafka được cung cấp trước và produce vào 1 topic trong Kafka bạn đã dựng
 - Thực hiện việc đọc dữ liệu từ topic mà bạn tạo ở bước trên và lưu trữ dữ liệu xuống MongoDB
@@ -28,8 +21,10 @@ load_dotenv()
 
 SOURCE_USERNAME = os.environ['SOURCE_USERNAME'] 
 SOURCE_PASSWORD = os.environ['SOURCE_PASSWORD'] 
+SOURCE_BOOSTRAP_SERVERS = os.environ['SOURCE_BOOSTRAP_SERVERS'].split(',')
 DESTINATION_USERNAME = os.environ['DESTINATION_USERNAME']
 DESTINATION_PASSWORD = os.environ['DESTINATION_PASSWORD']
+DESTINATION_BOOSTRAP_SERVERS = os.environ['DESTINATION_BOOSTRAP_SERVERS'].split(',')
 
 logging.basicConfig(
     level=logging.INFO,
@@ -123,7 +118,7 @@ def main() :
     # Cau hinh bridge 
     config = {
         'source': {
-            'bootstrap_servers': ["46.202.167.130:9094","46.202.167.130:9194","46.202.167.130:9294"],
+            'bootstrap_servers': SOURCE_BOOSTRAP_SERVERS,
             'group_id': 'bridge-consumer-group-v1',
             'auto_offset_reset': 'earliest',
             'enable_auto_commit': True,
@@ -133,7 +128,7 @@ def main() :
             'sasl_plain_password': SOURCE_PASSWORD,
         },
         'destination': {
-            'bootstrap_servers': ["localhost:9094","localhost:9194","localhost:9294"],
+            'bootstrap_servers': DESTINATION_BOOSTRAP_SERVERS,
             'acks': 'all',
             'retries': 3,
             'batch_size': 16384,
